@@ -38,6 +38,7 @@ accordionBtns.forEach((accordion) => {
   };
 
   accordion.addEventListener("keydown", function (event) {
+    console.log("Key pressed:", event.key);
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault(); //prevent the default behavior of the enter key
       this.click();   //simulate a click on the accordion button
