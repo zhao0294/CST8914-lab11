@@ -12,13 +12,22 @@
 const accordionBtns = document.querySelectorAll(".accordion");
 
 accordionBtns.forEach((accordion) => {
-  accordion.onclick = function () {
-    this.classList.toggle("is-open");
 
-    let content = this.nextElementSibling;
+  accordion.setAttribute("tabindex", "0");  //make sure the accordion button is focusable
+  const content = document.getElementById(accordion.getAttribute("aria-controls")); //get the content of the accordion button
+
+  content.setAttribute("aria-hidden", "true"); //make sure the content is hidden  
+
+  accordion.onclick = function () {
+    this.classList.toggle("is-open"); //toggle the is-open class
+
+    const isOpen = content.style.maxHeight && content.style.maxHeight !== "0px"; //check if the accordion is open or closed
+    this.setAttribute("aria-expanded", isOpen ? "false" : "true"); //toggle the aria-expanded attribute
+    content.setAttribute("aria-hidden", isOpen ? "true" : "false"); //toggle the aria-hidden attribute
+
     console.log(content);
 
-    if (content.style.maxHeight) {
+    if (isOpen) {
       //this is if the accordion is open
       content.style.maxHeight = null;
     } else {
@@ -27,4 +36,11 @@ accordionBtns.forEach((accordion) => {
       console.log(content.style.maxHeight);
     }
   };
+
+  accordion.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault(); //prevent the default behavior of the enter key
+      this.click();   //simulate a click on the accordion button
+    }
+  });
 });
